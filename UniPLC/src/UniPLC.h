@@ -23,7 +23,7 @@ public:
 	UniPLC(int argc, char **argv);
 	virtual ~UniPLC();
 
-	bool loadPlugin(const char* path, void** constructor, void** destructor);
+	void* loadPlugin(const char* path, void** constructor, void** destructor);
 
 	int run();
 
@@ -33,9 +33,11 @@ private:
 	static void signalHandler(int signum);
 
 private:
+	void* plcLogicHandle;
 	IPlcLogic* plcLogic;
 	void* destroyPlcLogic;
 
+	std::vector<void*> ioDeviceHandles;
 	std::vector<IIODevice*> ioDevices;
 	std::vector<void*> ioDevicesDestructors;
 

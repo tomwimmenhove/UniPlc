@@ -185,7 +185,8 @@ UniPLC::UniPLC(int argc, char **argv)
 		Logger::logger(LOG_INFO, "Loading IODevice \"%s\" plugin: %s\n", deviceName, iODevicesPluginPath);
 		contructIODevice_t* constructIODevice;
 		destroyIODevice_t* destroyIODevice;
-		if (!loadPlugin(iODevicesPluginPath, (void**) &constructIODevice, (void**) &destroyIODevice))
+		void* handle;
+		if ((handle = loadPlugin(iODevicesPluginPath, (void**) &constructIODevice, (void**) &destroyIODevice)) == NULL)
 		{
 			throw 1;
 		}
@@ -202,6 +203,7 @@ UniPLC::UniPLC(int argc, char **argv)
 		{
 			Logger::logger(LOG_CRIT, "Failed to load IODevice \"%s\"\n", deviceName);
 		}
+		ioDeviceHandles.push_back(handle);
 		ioDevices.push_back(ioDevice);
 		ioDevicesDestructors.push_back((void*) destroyIODevice);
 	}
@@ -222,7 +224,7 @@ UniPLC::UniPLC(int argc, char **argv)
 
 	Logger::logger(LOG_INFO, "Loading PLCLogic plugin: %s\n", plcLogicPluginPath);
 	constructPlcLogic_t* constructPlcLogic;
-	if (!loadPlugin(plcLogicPluginPath, (void**) &constructPlcLogic, (void**) &destroyPlcLogic))
+	if ((plcLogicHandle = loadPlugin(plcLogicPluginPath, (void**) &constructPlcLogic, (void**) &destroyPlcLogic)) == NULL)
 	{
 		throw 1;
 	}
@@ -250,46 +252,50 @@ UniPLC::~UniPLC()
 	/* Destroy PLC logic */
 	destroyPlcLogic_t* destructor = (destroyPlcLogic_t*) destroyPlcLogic;
 	destructor(plcLogic);
+	dlclose(plcLogicHandle);
 
 	/* Destroy IO Devices */
 	for(size_t i = 0; i < ioDevices.size(); i++)
 	{
 		destroyIODevice_t* destructor = (destroyIODevice_t*) ioDevicesDestructors[i];
 		destructor(ioDevices[i]);
+		dlclose(ioDeviceHandles[i]);
 	}
 
 	/* Destroy the server */
 	delete modbusServer;
 }
 
-bool UniPLC::loadPlugin(const char* path, void** constructor, void** destructor)
+void* UniPLC::loadPlugin(const char* path, void** constructor, void** destructor)
 {
-	void* plcLogic = dlopen(path, RTLD_LAZY);
-	if (plcLogic == NULL)
+	void* handle = dlopen(path, RTLD_LAZY);
+	if (handle == NULL)
 	{
 		Logger::logger(LOG_CRIT, "Cannot load library: %s\n", dlerror());
-		return false;
+		return NULL;
 	}
 	dlerror();
 
 	// load the symbols
-	*constructor = dlsym(plcLogic, "contruct");
+	*constructor = dlsym(handle, "contruct");
 	const char* dlsym_error = dlerror();
 	if (dlsym_error)
 	{
 		Logger::logger(LOG_CRIT, "Cannot load symbol \"contruct\": %s\n", dlsym_error);
-		return false;
+		dlclose(handle);
+		return NULL;
 	}
 
-	*destructor = dlsym(plcLogic, "destroy");
+	*destructor = dlsym(handle, "destroy");
 	dlsym_error = dlerror();
 	if (dlsym_error)
 	{
 		Logger::logger(LOG_CRIT, "Cannot load symbol \"destroy\": %s\n", dlsym_error);
-		return false;
+		dlclose(handle);
+		return NULL;
 	}
 
-	return true;
+	return handle;
 }
 
 int UniPLC::getLastSignal()
