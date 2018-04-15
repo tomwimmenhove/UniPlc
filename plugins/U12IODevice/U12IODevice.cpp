@@ -121,6 +121,11 @@ void U12IODevice::update(int deviceIndex)
 	char errorString[50];
 	long res;
 
+	if (events != NULL)
+	{
+		events->devicePreUpdate(this);
+	}
+
 	/* Setup data for  AOUpdate() */
 
 	/* The 4 IO's and 16 D's are combined together, respectively. */

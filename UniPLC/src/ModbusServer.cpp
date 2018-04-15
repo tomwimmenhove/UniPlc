@@ -10,11 +10,12 @@
 #include <cstring>
 
 #include "ModbusServer.h"
+#include "logger.h"
 
 using namespace std;
 
 ModbusServer::ModbusServer(const char *ip_address, int port, int maxConnections)
-	: events(NULL)
+: events(NULL)
 {
 	ctx = modbus_new_tcp(ip_address, port);
 
@@ -183,7 +184,7 @@ bool ModbusServer::processEvents(struct timeval *timeout)
 					/* Keep track of the maximum */
 					fdmax = newfd;
 				}
-				cerr << "New connection from " << inet_ntoa(clientaddr.sin_addr) << ":" << clientaddr.sin_port << " on socket " << newfd << endl;
+				Logger::logger(LOG_INFO, "New connection from %s:%d on socket %d\n", inet_ntoa(clientaddr.sin_addr), clientaddr.sin_port, newfd);
 			}
 		}
 		else
@@ -206,16 +207,16 @@ bool ModbusServer::processEvents(struct timeval *timeout)
 			{
 				/* This example server in ended on connection closing or
 				 * any errors. */
-				 cerr << "Connection closed on socket " <<  fd << endl;
-				 close(fd);
+				Logger::logger(LOG_INFO, "Connection closed on socket %d\n", fd);
+				close(fd);
 
-				 /* Remove from reference set */
-				 FD_CLR(fd, &refset);
+				/* Remove from reference set */
+				FD_CLR(fd, &refset);
 
-				 if (fd == fdmax)
-				 {
-					 fdmax--;
-				 }
+				if (fd == fdmax)
+				{
+					fdmax--;
+				}
 			}
 		}
 	}
