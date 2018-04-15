@@ -10,6 +10,7 @@
 
 #include <vector>
 #include <syslog.h>
+#include <libconfig.h++>
 
 #include "ModbusServer.h"
 #include "logger.h"
@@ -30,9 +31,15 @@ public:
 	int getLastSignal();
 
 private:
+	void initPLCLogic();
+	void killPLCLogic();
+	void reloadPLCLogic();
 	static void signalHandler(int signum);
 
 private:
+	libconfig::Config cfg;
+
+	const char* plcLogicPluginPath;
 	void* plcLogicHandle;
 	IPlcLogic* plcLogic;
 	void* destroyPlcLogic;

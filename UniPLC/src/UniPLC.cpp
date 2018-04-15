@@ -17,7 +17,6 @@
 
 #include "IPlcLogic.h"
 #include "UniPLC.h"
-#include <libconfig.h++>
 
 using namespace std;
 using namespace libconfig;
@@ -78,8 +77,6 @@ UniPLC::UniPLC(int argc, char **argv)
 		}
 	}
 
-
-	Config cfg;
 	try
 	{
 		Logger::logger(LOG_INFO, "Using configuration file %s\n", configFile);
@@ -220,8 +217,30 @@ UniPLC::UniPLC(int argc, char **argv)
 		Logger::logger(LOG_CRIT, "Configuration: No \"plugin\" entry in \"IODevices\" found\n");
 		throw 1;
 	}
-	const char* plcLogicPluginPath = plcLogicSetting["plugin"].c_str();
+	plcLogicPluginPath = plcLogicSetting["plugin"].c_str();
 
+	initPLCLogic();
+}
+
+UniPLC::~UniPLC()
+{
+	/* Destroy PLC logic */
+	killPLCLogic();
+
+	/* Destroy IO Devices */
+	for(size_t i = 0; i < ioDevices.size(); i++)
+	{
+		destroyIODevice_t* destructor = (destroyIODevice_t*) ioDevicesDestructors[i];
+		destructor(ioDevices[i]);
+		dlclose(ioDeviceHandles[i]);
+	}
+
+	/* Destroy the server */
+	delete modbusServer;
+}
+
+void UniPLC::initPLCLogic()
+{
 	Logger::logger(LOG_INFO, "Loading PLCLogic plugin: %s\n", plcLogicPluginPath);
 	constructPlcLogic_t* constructPlcLogic;
 	if ((plcLogicHandle = loadPlugin(plcLogicPluginPath, (void**) &constructPlcLogic, (void**) &destroyPlcLogic)) == NULL)
@@ -247,23 +266,17 @@ UniPLC::UniPLC(int argc, char **argv)
 	}
 }
 
-UniPLC::~UniPLC()
+void UniPLC::killPLCLogic()
 {
-	/* Destroy PLC logic */
 	destroyPlcLogic_t* destructor = (destroyPlcLogic_t*) destroyPlcLogic;
 	destructor(plcLogic);
 	dlclose(plcLogicHandle);
+}
 
-	/* Destroy IO Devices */
-	for(size_t i = 0; i < ioDevices.size(); i++)
-	{
-		destroyIODevice_t* destructor = (destroyIODevice_t*) ioDevicesDestructors[i];
-		destructor(ioDevices[i]);
-		dlclose(ioDeviceHandles[i]);
-	}
-
-	/* Destroy the server */
-	delete modbusServer;
+void UniPLC::reloadPLCLogic()
+{
+	killPLCLogic();
+	initPLCLogic();
 }
 
 void* UniPLC::loadPlugin(const char* path, void** constructor, void** destructor)
@@ -332,6 +345,7 @@ int UniPLC::run()
     action.sa_handler = signalHandler;
     sigaction(SIGTERM, &action, NULL);
     sigaction(SIGHUP, &action, NULL);
+    sigaction(SIGUSR1, &action, NULL);
 
 	/* The main loop */
 	for (;;)
@@ -356,7 +370,15 @@ int UniPLC::run()
 
 		if (sig)
 		{
-			break;
+			if (sig == SIGUSR1)
+			{
+				sig = 0;
+				reloadPLCLogic();
+			}
+			else
+			{
+				break;
+			}
 		}
 	}
 
