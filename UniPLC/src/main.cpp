@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include "UniPLC.h"
 
@@ -8,7 +10,8 @@ int main(int argc, char **argv)
 	int sig;
 	int ret;
 
-	do {
+	do
+	{
 		try
 		{
 			plc = new UniPLC(argc, argv);
@@ -34,7 +37,6 @@ int main(int argc, char **argv)
 		sig = plc->getLastSignal();
 
 		delete plc;
-
 	} while (sig == SIGHUP);
 
 	return ret;

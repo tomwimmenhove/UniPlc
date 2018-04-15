@@ -32,6 +32,8 @@ UniPLC::UniPLC(int argc, char **argv)
 	const char* configFile = "UniPLC.conf";
 	int c;
 
+	optind = 1;
+
 	while (1)
 	{
 		static struct option long_options[] =
@@ -80,6 +82,7 @@ UniPLC::UniPLC(int argc, char **argv)
 	Config cfg;
 	try
 	{
+		Logger::logger(LOG_INFO, "Using configuration file %s\n", configFile);
 		cfg.readFile(configFile);
 	}
 	catch(const FileIOException &fioex)
@@ -265,7 +268,7 @@ bool UniPLC::loadPlugin(const char* path, void** constructor, void** destructor)
 	if (plcLogic == NULL)
 	{
 		Logger::logger(LOG_CRIT, "Cannot load library: %s\n", dlerror());
-		return 1;
+		return false;
 	}
 	dlerror();
 
