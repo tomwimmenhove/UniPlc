@@ -30,11 +30,6 @@ ModbusServer::ModbusServer(const char *ip_address, int port, int maxConnections)
 		throw err;
 	}
 
-	mb_mapping->tab_input_registers[0] = 42;
-	mb_mapping->tab_input_registers[1] = 43;
-	mb_mapping->tab_registers[0] = 44;
-	mb_mapping->tab_registers[1] = 45;
-
 	server_socket = modbus_tcp_listen(ctx, maxConnections);
 	if (server_socket == -1)
 	{
