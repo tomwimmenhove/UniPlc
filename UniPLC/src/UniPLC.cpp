@@ -219,6 +219,12 @@ UniPLC::UniPLC(int argc, char **argv)
 	}
 	plcLogicPluginPath = plcLogicSetting["plugin"].c_str();
 
+	plcLogicOptions = NULL;
+	if (plcLogicSetting.exists("options"))
+	{
+		plcLogicOptions = &plcLogicSetting["options"];
+	}
+
 	initPLCLogic();
 }
 
@@ -249,7 +255,7 @@ void UniPLC::initPLCLogic()
 	}
 
 	Logger::logger(LOG_INFO, "Loading PLCLogic\n");
-	plcLogic = constructPlcLogic(Logger::logger, modbusServer, ioDevices);
+	plcLogic = constructPlcLogic(Logger::logger, modbusServer, ioDevices, plcLogicOptions);
 	if (plcLogic == NULL)
 	{
 		Logger::logger(LOG_CRIT, "Failed to load PLCLogic\n");
@@ -370,6 +376,7 @@ int UniPLC::run()
 
 		if (sig)
 		{
+			plcLogic->shutDown();
 			if (sig == SIGUSR1)
 			{
 				sig = 0;

@@ -39,6 +39,7 @@ private:
 private:
 	libconfig::Config cfg;
 
+	libconfig::Setting* plcLogicOptions;
 	const char* plcLogicPluginPath;
 	void* plcLogicHandle;
 	IPlcLogic* plcLogic;

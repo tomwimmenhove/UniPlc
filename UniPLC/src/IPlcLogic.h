@@ -16,9 +16,10 @@ class IPlcLogic : public IModbusServerEvents, public IIODeviceEvents
 {
 public:
 	virtual void allUpdated() = 0;
+	virtual void shutDown() = 0;
 };
 
-typedef IPlcLogic* constructPlcLogic_t(Logger::logger_t logger, ModbusServer*, std::vector<IIODevice*>&);
+typedef IPlcLogic* constructPlcLogic_t(Logger::logger_t logger, ModbusServer*, std::vector<IIODevice*>&, libconfig::Setting* options);
 typedef void destroyPlcLogic_t(IPlcLogic* );
 
 #endif /* IPLCLOGIC_H_ */

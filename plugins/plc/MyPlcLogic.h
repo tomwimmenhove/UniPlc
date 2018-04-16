@@ -16,12 +16,12 @@
 #include "IIODevice.h"
 #include "IPlcLogic.h"
 
-using namespace std;
+#include <libconfig.h++>
 
 class MyPlcLogic : public IPlcLogic
 {
 public:
-	MyPlcLogic(ModbusServer* mbServer, std::vector<IIODevice*>& ioDevices);
+	MyPlcLogic(ModbusServer* mbServer, std::vector<IIODevice*>& ioDevices, libconfig::Setting*);
 	~MyPlcLogic() {}
 
 	/* Modbus */
@@ -40,6 +40,7 @@ public:
 
 	/* UniPLC */
 	void allUpdated();
+	void shutDown();
 
 public:
 	static Logger::logger_t logger;

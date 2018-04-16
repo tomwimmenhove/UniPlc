@@ -10,9 +10,10 @@
 Logger::logger_t MyPlcLogic::logger;
 
 using namespace std;
+using namespace libconfig;
 
 /* constructor */
-MyPlcLogic::MyPlcLogic(ModbusServer* mbServer, vector<IIODevice*>& ioDevices)
+MyPlcLogic::MyPlcLogic(ModbusServer* mbServer, vector<IIODevice*>& ioDevices, Setting*)
 	: mbServer(mbServer), ioDevices(ioDevices)
 {
 	this->logger = logger;
@@ -99,11 +100,16 @@ void MyPlcLogic::allUpdated()
 	//logger(LOG_INFO, "tick tock\n");
 }
 
+void MyPlcLogic::shutDown()
+{
+
+}
+
 /* Functions for contruction and destruction */
-extern "C" MyPlcLogic* contruct(Logger::logger_t logger, ModbusServer* mbServer, std::vector<IIODevice*>& ioDevices)
+extern "C" MyPlcLogic* contruct(Logger::logger_t logger, ModbusServer* mbServer, std::vector<IIODevice*>& ioDevices, Setting* settings)
 {
 	MyPlcLogic::logger = logger;
-	return new MyPlcLogic(mbServer, ioDevices);
+	return new MyPlcLogic(mbServer, ioDevices, settings);
 }
 
 extern "C" void destroy(MyPlcLogic* plcLogic)
