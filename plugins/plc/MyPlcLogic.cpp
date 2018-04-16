@@ -82,6 +82,10 @@ void MyPlcLogic::digitalInputChanged(IIODevice* ioDevice, int inputIndex)
 	logger(LOG_INFO, "Digital input %d on device %d changed to %d\n", inputIndex, ioDevice->getDeviceIndex(), value);
 };
 
+void MyPlcLogic::devicePreUpdate(IIODevice* ioDevice)
+{
+
+}
 
 void MyPlcLogic::deviceUpdated(IIODevice* ioDevice)
 {

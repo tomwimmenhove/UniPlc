@@ -35,6 +35,7 @@ public:
 	/* IODevice */
 	void analogInputChanged(IIODevice* ioDevice, int inputIndex);
 	void digitalInputChanged(IIODevice* ioDevice, int inputIndex);
+	void devicePreUpdate(IIODevice* ioDevice);
 	void deviceUpdated(IIODevice* ioDevice);
 
 	/* UniPLC */
