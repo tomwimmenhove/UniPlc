@@ -30,8 +30,10 @@ public:
 	int getDeviceIndex() { return deviceIndex; }
 
 private:
-	static long setBitsFromVector(std::vector<bool>& v, int num, int start);
-	void setAndCompareBitsInVector(int deviceIndex, std::vector<bool>& v, int num, int start, long bits);
+//	static long setBitsFromVector(std::vector<bool>& v, int num, int start);
+//	void setAndCompareBitsInVector(int deviceIndex, std::vector<bool>& v, int num, int start, long bits);
+	static long setBitsFromVector(std::vector<uint8_t>& v, int num, int start);
+	void setAndCompareBitsInVector(int deviceIndex, std::vector<uint8_t>& v, int num, int start, long bits);
 	static long gainToLong(long gain);
 
 public:

@@ -67,7 +67,8 @@ U12IODevice::~U12IODevice()
 {
 }
 
-long U12IODevice::setBitsFromVector(std::vector<bool>& v, int num, int start)
+//long U12IODevice::setBitsFromVector(std::vector<bool>& v, int num, int start)
+long U12IODevice::setBitsFromVector(std::vector<uint8_t>& v, int num, int start)
 {
 	long bits = 0;
 
@@ -82,7 +83,8 @@ long U12IODevice::setBitsFromVector(std::vector<bool>& v, int num, int start)
 	return bits;
 }
 
-void U12IODevice::setAndCompareBitsInVector(int deviceIndex, std::vector<bool>& v, int num, int start, long bits)
+//void U12IODevice::setAndCompareBitsInVector(int deviceIndex, std::vector<bool>& v, int num, int start, long bits)
+void U12IODevice::setAndCompareBitsInVector(int deviceIndex, std::vector<uint8_t>& v, int num, int start, long bits)
 {
 	for (int i = 0; i < num; i++)
 	{

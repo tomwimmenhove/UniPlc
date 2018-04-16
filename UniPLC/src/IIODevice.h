@@ -10,6 +10,7 @@
 
 #include <vector>
 #include <libconfig.h++>
+#include <stdint.h>
 
 #include "IIODeviceEvents.h"
 #include "UniPLC.h"
@@ -29,8 +30,10 @@ public:
 	virtual int getDeviceIndex() = 0;
 
 public:
-	std::vector<bool> digitalIODirectionOutput;
-	std::vector<bool> digitalIO;
+	//std::vector<bool> digitalIODirectionOutput;
+	//std::vector<bool> digitalIO;
+	std::vector<uint8_t> digitalIODirectionOutput;
+	std::vector<uint8_t> digitalIO;
 	std::vector<float> analogInputs;
 	std::vector<float> gains;
 	std::vector<float> supportedGains;
