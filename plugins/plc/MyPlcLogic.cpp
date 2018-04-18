@@ -100,11 +100,6 @@ void MyPlcLogic::allUpdated()
 	//logger(LOG_INFO, "tick tock\n");
 }
 
-void MyPlcLogic::shutDown()
-{
-
-}
-
 /* Functions for contruction and destruction */
 extern "C" MyPlcLogic* contruct(Logger::logger_t logger, ModbusServer* mbServer, std::vector<IIODevice*>& ioDevices, Setting* settings)
 {

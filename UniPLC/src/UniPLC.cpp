@@ -350,6 +350,7 @@ int UniPLC::run()
     memset(&action, 0, sizeof(struct sigaction));
     action.sa_handler = signalHandler;
     sigaction(SIGTERM, &action, NULL);
+    sigaction(SIGINT, &action, NULL);
     sigaction(SIGHUP, &action, NULL);
     sigaction(SIGUSR1, &action, NULL);
 
@@ -376,7 +377,6 @@ int UniPLC::run()
 
 		if (sig)
 		{
-			plcLogic->shutDown();
 			if (sig == SIGUSR1)
 			{
 				sig = 0;

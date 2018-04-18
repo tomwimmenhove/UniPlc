@@ -44,6 +44,7 @@ private:
 	long demo;
 	IIODeviceEvents* events;
 	int deviceIndex;
+	bool statusuLed;
 };
 
 #endif /* U12IODEVICE_H_ */

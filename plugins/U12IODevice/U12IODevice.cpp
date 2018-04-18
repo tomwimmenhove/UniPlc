@@ -61,6 +61,8 @@ U12IODevice::U12IODevice(int deviceIndex, Setting* setting)
 	analogInputs.resize(12, 0.0f); // 8 single-ended inputs, 4 differential inputs
 	analogOutputs.resize(2, 0.0f);
 	counters.resize(1, 0);
+
+	statusuLed = true;
 }
 
 U12IODevice::~U12IODevice()
@@ -190,7 +192,7 @@ void U12IODevice::update(int deviceIndex)
 				demo,
 				&stateIO,
 				0,
-				1,
+				statusuLed,
 				4,
 				&channels[i],
 				&lgains[i],
@@ -227,6 +229,8 @@ void U12IODevice::update(int deviceIndex)
 	{
 		events->deviceUpdated(this);
 	}
+
+	statusuLed = !statusuLed;
 }
 
 extern "C" IIODevice* contruct(Logger::logger_t logger, int deviceIndex, Setting* setting)

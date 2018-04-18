@@ -40,7 +40,6 @@ public:
 
 	/* UniPLC */
 	void allUpdated();
-	void shutDown();
 
 public:
 	static Logger::logger_t logger;
