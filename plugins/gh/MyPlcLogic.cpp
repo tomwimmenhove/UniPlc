@@ -113,7 +113,6 @@ void MyPlcLogic::saveState()
 	catch(const FileIOException &fioex)
 	{
 		logger(LOG_CRIT, "I/O error while writing file \"%s\": %s\n", saveConfigState, strerror(errno));
-		return;
 	}
 
 	dirtyState = false;
