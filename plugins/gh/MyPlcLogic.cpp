@@ -358,20 +358,20 @@ void MyPlcLogic::devicePreUpdate(IIODevice* ioDevice)
 
 	if (tmpLamp && !lamp)
 	{
-		logger(LOG_INFO, "Lamp on timer triggered");
+		logger(LOG_INFO, "Lamp on timer triggered\n");
 	}
 	if (!tmpLamp && lamp)
 	{
-		logger(LOG_INFO, "Lamp off timer triggered");
+		logger(LOG_INFO, "Lamp off timer triggered\n");
 	}
 
 	if (tmpFan && !fan)
 	{
-		logger(LOG_INFO, "Fan on timer triggered");
+		logger(LOG_INFO, "Fan on timer triggered\n");
 	}
 	if (!tmpFan && fan)
 	{
-		logger(LOG_INFO, "Fan off timer triggered");
+		logger(LOG_INFO, "Fan off timer triggered\n");
 	}
 
 	lamp = tmpLamp;
