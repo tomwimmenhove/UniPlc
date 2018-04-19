@@ -179,7 +179,7 @@ bool ModbusServer::processEvents(struct timeval *timeout)
 					/* Keep track of the maximum */
 					fdmax = newfd;
 				}
-				Logger::logger(LOG_INFO, "New connection from %s:%d on socket %d\n", inet_ntoa(clientaddr.sin_addr), clientaddr.sin_port, newfd);
+				Logger::logger(LOG_INFO, "New connection from %s:%d\n", inet_ntoa(clientaddr.sin_addr), clientaddr.sin_port);
 			}
 		}
 		else
@@ -202,7 +202,18 @@ bool ModbusServer::processEvents(struct timeval *timeout)
 			{
 				/* This example server in ended on connection closing or
 				 * any errors. */
-				Logger::logger(LOG_INFO, "Connection closed on socket %d\n", fd);
+				struct sockaddr_in sa;
+				socklen_t sa_len = sizeof(sa);
+
+				if (getsockname(fd, (struct sockaddr *) &sa, &sa_len) == -1)
+				{
+					Logger::logger(LOG_WARNING, "getsockname(): %s on socket %d. Connection closed.\n", strerror(errno), fd);
+				}
+				else
+				{
+					Logger::logger(LOG_INFO, "Connection closed: %s\n", inet_ntoa(sa.sin_addr));
+				}
+
 				close(fd);
 
 				/* Remove from reference set */

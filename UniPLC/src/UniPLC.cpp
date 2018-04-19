@@ -354,6 +354,8 @@ int UniPLC::run()
     sigaction(SIGHUP, &action, NULL);
     sigaction(SIGUSR1, &action, NULL);
 
+    Logger::logger(LOG_INFO, "Daemon running\n");
+
 	/* The main loop */
 	for (;;)
 	{
