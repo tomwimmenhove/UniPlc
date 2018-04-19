@@ -309,7 +309,7 @@ unsigned long long MyPlcLogic::getUtc_us()
 {
 	struct timeval tv;
 	gettimeofday(&tv, NULL);
-	return tv.tv_sec * 1000000 + tv.tv_usec;
+	return (unsigned long long) tv.tv_sec * 1000000llu + (unsigned long long) tv.tv_usec;
 }
 
 void MyPlcLogic::devicePreUpdate(IIODevice* ioDevice)
@@ -342,7 +342,7 @@ void MyPlcLogic::devicePreUpdate(IIODevice* ioDevice)
 			nutrientsTestStart, MB_REGS_HOLD[MB_HOLD_NUTRIENT_TEST_MS] * 1000, "NutrientTest");
 
 	/* Get UTC time */
-	unsigned long long utc_us = getUtc_us();
+	unsigned long long utc_us = getUtc_us() % USECSINDAY;
 
 	/* Lamp Timer */
 	bool tmpLamp = isBetweenMod(
