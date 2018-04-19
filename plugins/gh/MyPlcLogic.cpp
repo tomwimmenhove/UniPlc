@@ -106,7 +106,15 @@ void MyPlcLogic::saveState()
 		holdingRegisters.add(Setting::TypeInt) = MB_REGS_HOLD[i];
 	}
 
-	cfg.writeFile(saveConfigState);
+	try
+	{
+		cfg.writeFile(saveConfigState);
+	}
+	catch(const FileIOException &fioex)
+	{
+		logger(LOG_CRIT, "I/O error while writing file \"%s\": %s\n", saveConfigState, strerror(errno));
+		return;
+	}
 
 	dirtyState = false;
 }
@@ -244,7 +252,7 @@ void MyPlcLogic::digitalInputChanged(IIODevice* ioDevice, int inputIndex)
 uint64_t MyPlcLogic::milliSeconds()
 {
 	struct timeval tv;
-	        gettimeofday(&tv, NULL);
+	gettimeofday(&tv, NULL);
 
 	auto now = std::chrono::system_clock::now();
 	auto now_ms = std::chrono::time_point_cast<std::chrono::milliseconds>(now);
@@ -255,18 +263,18 @@ uint64_t MyPlcLogic::milliSeconds()
 
 bool MyPlcLogic::isBetweenMod(unsigned long long start, unsigned long long stop, unsigned long long x, unsigned long long mod)
 {
-        stop += mod - 1; // exclude stop
-        start %= mod;
-        stop %= mod;
-        x %= mod;
+	stop += mod - 1; // exclude stop
+	start %= mod;
+	stop %= mod;
+	x %= mod;
 
-        if (start > stop)
-        {
-                return (x >= start && x < mod) ||
-                       (x >= 0 && x <= stop);
-        }
+	if (start > stop)
+	{
+		return (x >= start && x < mod) ||
+				(x >= 0 && x <= stop);
+	}
 
-        return (x >= start) && (x <= stop);
+	return (x >= start) && (x <= stop);
 }
 
 void MyPlcLogic::checkTriggerTimer(IIODevice* ioDevice, uint8_t& coil, uint8_t& pin, uint64_t& started_ms, uint64_t time_ms, const char* name)
