@@ -40,6 +40,7 @@ using namespace libconfig;
 #define MB_COIL_LAMP_OVERRIDE			201
 #define MB_COIL_FAN_OVERRIDE			203
 #define MB_COIL_RESERVOIR_PUMP_OVERRIDE	204
+#define MB_COIL_NUTRIENT_TEST_OVERRIDE	205
 
 /* Holding register definitions */
 #define MB_HOLD_LAMP_STARTMINUTE		100
@@ -380,6 +381,8 @@ void MyPlcLogic::devicePreUpdate(IIODevice* ioDevice)
 	ioDevice->digitalIO[PIN_LAMP] 			= lamp 			|| MB_COILS[MB_COIL_LAMP_OVERRIDE];
 	ioDevice->digitalIO[PIN_FAN] 			= fan	 		|| MB_COILS[MB_COIL_FAN_OVERRIDE];
 	ioDevice->digitalIO[PIN_RESERVOIR_PUMP]	= reservoirPump	|| MB_COILS[MB_COIL_RESERVOIR_PUMP_OVERRIDE];
+
+	ioDevice->digitalIO[PIN_NUTRIENT_TEST] |= MB_COILS[MB_COIL_NUTRIENT_TEST_OVERRIDE];
 }
 
 void MyPlcLogic::deviceUpdated(IIODevice* ioDevice)
