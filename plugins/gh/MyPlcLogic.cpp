@@ -299,10 +299,10 @@ void MyPlcLogic::checkTriggerTimer(IIODevice* ioDevice, uint8_t& coil, uint8_t& 
 				{
 					logger(LOG_INFO, "TriggerTimer: %s stop\n", name);
 				}
-				pin = false;
 				started_ms = 0;
 			}
 		}
+		pin = false;
 	}
 }
 
