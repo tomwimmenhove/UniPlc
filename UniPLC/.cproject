@@ -128,6 +128,81 @@
 			<resource resourceType="PROJECT" workspacePath="/UniPLC"/>
 		</configuration>
 	</storageModule>
-	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
 	<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
+	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets">
+		<buildTargets>
+			<target name="remote-ativate" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+				<buildCommand>/home/tom/grive-Tom.Wimmenhove/Projects/automation/remote-activate.sh</buildCommand>
+				<buildArguments/>
+				<buildTarget/>
+				<stopOnError>true</stopOnError>
+				<useDefaultCommand>false</useDefaultCommand>
+				<runAllBuilders>false</runAllBuilders>
+			</target>
+			<target name="Remote make gh" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+				<buildCommand>ssh</buildCommand>
+				<buildArguments>tom@greenian "cd /home/tom/grive-Tom.Wimmenhove/Projects/automation/plugins/gh/Debug; make clean ; make -j 2 all"</buildArguments>
+				<buildTarget/>
+				<stopOnError>true</stopOnError>
+				<useDefaultCommand>false</useDefaultCommand>
+				<runAllBuilders>false</runAllBuilders>
+			</target>
+			<target name="Remote make UniPLC" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+				<buildCommand>ssh</buildCommand>
+				<buildArguments>tom@greenian "cd /home/tom/grive-Tom.Wimmenhove/Projects/automation/UniPLC/Debug; make clean ; make -j 2 all"</buildArguments>
+				<buildTarget/>
+				<stopOnError>true</stopOnError>
+				<useDefaultCommand>false</useDefaultCommand>
+				<runAllBuilders>false</runAllBuilders>
+			</target>
+			<target name="Remote SIGHUP" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+				<buildCommand>ssh</buildCommand>
+				<buildArguments>tom@greenian "killall -HUP UniPLC"</buildArguments>
+				<buildTarget/>
+				<stopOnError>true</stopOnError>
+				<useDefaultCommand>false</useDefaultCommand>
+				<runAllBuilders>false</runAllBuilders>
+			</target>
+			<target name="Remote SIGUSR1" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+				<buildCommand>ssh</buildCommand>
+				<buildArguments>tom@greenian "killall -USR1 UniPLC"</buildArguments>
+				<buildTarget/>
+				<stopOnError>true</stopOnError>
+				<useDefaultCommand>false</useDefaultCommand>
+				<runAllBuilders>false</runAllBuilders>
+			</target>
+			<target name="Remote restart" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+				<buildCommand>ssh</buildCommand>
+				<buildArguments>tom@greenian "killall UniPLC; sleep .5; /home/tom/grive-Tom.Wimmenhove/Projects/automation/UniPLC/Debug/UniPLC -f /home/tom/grive-Tom.Wimmenhove/Projects/automation/UniPLC/gh.conf  -d"</buildArguments>
+				<buildTarget/>
+				<stopOnError>true</stopOnError>
+				<useDefaultCommand>false</useDefaultCommand>
+				<runAllBuilders>false</runAllBuilders>
+			</target>
+			<target name="Remote make U12" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+				<buildCommand>ssh</buildCommand>
+				<buildArguments>tom@greenian "cd /home/tom/grive-Tom.Wimmenhove/Projects/automation/plugins/U12IODevice/Debug; make clean ; make -j 2 all"</buildArguments>
+				<buildTarget/>
+				<stopOnError>true</stopOnError>
+				<useDefaultCommand>false</useDefaultCommand>
+				<runAllBuilders>false</runAllBuilders>
+			</target>
+			<target name="remote-ativate-gh" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+				<buildCommand>/home/tom/grive-Tom.Wimmenhove/Projects/automation/remote-activate-gh.sh</buildCommand>
+				<buildArguments/>
+				<buildTarget/>
+				<stopOnError>true</stopOnError>
+				<useDefaultCommand>false</useDefaultCommand>
+				<runAllBuilders>false</runAllBuilders>
+			</target>
+			<target name="remote-ativate-u12" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+				<buildCommand>/home/tom/grive-Tom.Wimmenhove/Projects/automation/remote-activate-u12.sh</buildCommand>
+				<buildArguments/>
+				<buildTarget/>
+				<stopOnError>true</stopOnError>
+				<useDefaultCommand>false</useDefaultCommand>
+				<runAllBuilders>false</runAllBuilders>
+			</target>
+		</buildTargets>
+	</storageModule>
 </cproject>

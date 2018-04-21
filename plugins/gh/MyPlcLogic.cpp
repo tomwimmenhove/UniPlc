@@ -206,9 +206,33 @@ void MyPlcLogic::writtenCoil(int address)
 	}
 }
 
+const char* MyPlcLogic::holdingRegistertName(int index)
+{
+	static char buf[32];
+
+	switch (index)
+	{
+		case MB_HOLD_LAMP_STARTMINUTE:
+			return "Lamp Start Time";
+		case MB_HOLD_LAMP_STOPMINUTE:
+			return "Lamp Stop Time";
+		case MB_HOLD_FAN_STARTMINUTE:
+			return "Fan Start Time";
+		case MB_HOLD_FAN_STOPMINUTE:
+			return "Fan Stop Time";
+		case MB_HOLD_NUTRIENT_TEST_MS:
+			return "Nutrient Test Milliseconds";
+	}
+
+	snprintf(buf, sizeof(buf), "%d", index);
+
+	return buf;
+}
+
+
 void MyPlcLogic::writtenHoldingRegister(int address)
 {
-	logger(LOG_INFO, "Written %d to holding register %d\n", MB_REGS_HOLD[address] ,address);
+	logger(LOG_INFO, "Written to holding register: %s=%d\n", holdingRegistertName(address), MB_REGS_HOLD[address]);
 
 	/* Set the timer to check for periodic state-saving */
 	dirtyState = true;
@@ -277,7 +301,7 @@ bool MyPlcLogic::isBetweenMod(unsigned long long start, unsigned long long stop,
 	return (x >= start) && (x <= stop);
 }
 
-void MyPlcLogic::checkTriggerTimer(IIODevice* ioDevice, uint8_t& coil, uint8_t& pin, uint64_t& started_ms, uint64_t time_ms, const char* name)
+void MyPlcLogic::checkTriggerTimer(IIODevice* ioDevice, uint8_t& coil, bool& pin, uint64_t& started_ms, uint64_t time_ms, const char* name)
 {
 	if (coil) // Trigger
 	{
@@ -299,10 +323,10 @@ void MyPlcLogic::checkTriggerTimer(IIODevice* ioDevice, uint8_t& coil, uint8_t& 
 				{
 					logger(LOG_INFO, "TriggerTimer: %s stop\n", name);
 				}
+				pin = false;
 				started_ms = 0;
 			}
 		}
-		pin = false;
 	}
 }
 
@@ -339,7 +363,7 @@ void MyPlcLogic::devicePreUpdate(IIODevice* ioDevice)
 	/* Nutrients timer */
 	checkTriggerTimer(ioDevice,
 			MB_COILS[MB_COIL_TRIGGER_NUTRIENT_TEST],
-			ioDevice->digitalIO[PIN_NUTRIENT_TEST],
+			nutrientTest,
 			nutrientsTestStart, MB_REGS_HOLD[MB_HOLD_NUTRIENT_TEST_MS] * 1000, "NutrientTest");
 
 	/* Get UTC time */
@@ -382,7 +406,7 @@ void MyPlcLogic::devicePreUpdate(IIODevice* ioDevice)
 	ioDevice->digitalIO[PIN_FAN] 			= fan	 		|| MB_COILS[MB_COIL_FAN_OVERRIDE];
 	ioDevice->digitalIO[PIN_RESERVOIR_PUMP]	= reservoirPump	|| MB_COILS[MB_COIL_RESERVOIR_PUMP_OVERRIDE];
 
-	ioDevice->digitalIO[PIN_NUTRIENT_TEST] |= MB_COILS[MB_COIL_NUTRIENT_TEST_OVERRIDE];
+	ioDevice->digitalIO[PIN_NUTRIENT_TEST]  = nutrientTest  || MB_COILS[MB_COIL_NUTRIENT_TEST_OVERRIDE];
 }
 
 void MyPlcLogic::deviceUpdated(IIODevice* ioDevice)

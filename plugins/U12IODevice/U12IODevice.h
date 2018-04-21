@@ -45,6 +45,7 @@ private:
 	IIODeviceEvents* events;
 	int deviceIndex;
 	bool statusuLed;
+	bool labjackError;
 };
 
 #endif /* U12IODEVICE_H_ */

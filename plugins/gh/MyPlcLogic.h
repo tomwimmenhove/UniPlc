@@ -45,7 +45,7 @@ private:
 	/* Timing */
 	static bool isBetweenMod(unsigned long long start, unsigned long long stop, unsigned long long x, unsigned long long mod);
 	static uint64_t milliSeconds();
-	void checkTriggerTimer(IIODevice* ioDevice, uint8_t& coil, uint8_t& pin, uint64_t& started_ms, uint64_t time_ms, const char* name = NULL);
+	void checkTriggerTimer(IIODevice* ioDevice, uint8_t& coil, bool& pin, uint64_t& started_ms, uint64_t time_ms, const char* name = NULL);
 	unsigned long long getUtc_us();
 
 	/* Voltage range */
@@ -59,6 +59,7 @@ private:
 
 	/* Helpers */
 	static const char *digitalInputName(int index);
+	static const char* holdingRegistertName(int index);
 
 public:
 	static Logger::logger_t logger;
@@ -80,6 +81,7 @@ private:
 	bool lamp = false;
 	bool reservoirPump = false;
 	bool fan = false;
+	bool nutrientTest = false;
 };
 
 #endif /* MYPLCLOGIC_H_ */

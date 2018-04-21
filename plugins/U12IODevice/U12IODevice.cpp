@@ -63,6 +63,8 @@ U12IODevice::U12IODevice(int deviceIndex, Setting* setting)
 	counters.resize(1, 0);
 
 	statusuLed = true;
+
+	labjackError = false;
 }
 
 U12IODevice::~U12IODevice()
@@ -159,7 +161,11 @@ void U12IODevice::update(int deviceIndex)
 	if (res != 0)
 	{
 		GetErrorString(res, errorString);
-		logger(LOG_CRIT, "U12IODevice: LabJack error: %s\n", errorString);
+		if (!labjackError)
+		{
+			logger(LOG_CRIT, "U12IODevice: LabJack error: %s\n", errorString);
+		}
+		labjackError = true;
 		return;
 	}
 
@@ -202,7 +208,11 @@ void U12IODevice::update(int deviceIndex)
 		if (res != 0)
 		{
 			GetErrorString(res, errorString);
-			logger(LOG_CRIT, "U12IODevice: LabJack error: %s\n", errorString);
+			if (!labjackError)
+			{
+				logger(LOG_CRIT, "U12IODevice: LabJack error: %s\n", errorString);
+			}
+			labjackError = true;
 			return;
 		}
 
@@ -210,6 +220,12 @@ void U12IODevice::update(int deviceIndex)
 		{
 			logger(LOG_CRIT, "U12IODevice: LabJack overvoltage on analog inputs %d-%d\n", i, i+3);
 		}
+	}
+
+	if (labjackError)
+	{
+		logger(LOG_CRIT, "U12IODevice: Previous labjack error resolved\n");
+		labjackError = false;
 	}
 
 	/* Store the results */
