@@ -28,7 +28,7 @@ UniPLC::UniPLC(int argc, char **argv)
 {
 	Logger::logger(LOG_INFO, "UniPLC Starting\n");
 
-	const char* configFile = "UniPLC.conf";
+	const char* configFile = "/etc/uniplc/uniplc.conf";
 	int c;
 
 	optind = 1;

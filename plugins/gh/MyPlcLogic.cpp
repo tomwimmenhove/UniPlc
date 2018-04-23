@@ -203,6 +203,9 @@ void MyPlcLogic::writtenCoil(int address)
 	case MB_COIL_RESERVOIR_PUMP_OVERRIDE:
 		logger(LOG_INFO, "%s override on reservoir\n", value ? "Enabled" : "Disabled");
 		break;
+	case MB_COIL_NUTRIENT_TEST_OVERRIDE:
+		logger(LOG_INFO, "%s override on nutrient test\n", value ? "Enabled" : "Disabled");
+		break;
 	}
 }
 
