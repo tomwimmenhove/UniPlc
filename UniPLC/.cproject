@@ -141,7 +141,7 @@
 			</target>
 			<target name="Remote make gh" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 				<buildCommand>ssh</buildCommand>
-				<buildArguments>tom@greenian "cd /home/tom/grive-Tom.Wimmenhove/Projects/automation/plugins/gh/Debug; make clean ; make -j 2 all"</buildArguments>
+				<buildArguments>root@greenian "cd /home/tom/grive-Tom.Wimmenhove/Projects/automation/plugins/gh; make clean ; make -j 2 all; make install"</buildArguments>
 				<buildTarget/>
 				<stopOnError>true</stopOnError>
 				<useDefaultCommand>false</useDefaultCommand>
@@ -149,7 +149,7 @@
 			</target>
 			<target name="Remote make UniPLC" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 				<buildCommand>ssh</buildCommand>
-				<buildArguments>tom@greenian "cd /home/tom/grive-Tom.Wimmenhove/Projects/automation/UniPLC/Debug; make clean ; make -j 2 all"</buildArguments>
+				<buildArguments>root@greenian "cd /home/tom/grive-Tom.Wimmenhove/Projects/automation/UniPLC/src; /etc/init.d/plc stop; make clean ; make -j 2 all; make install"</buildArguments>
 				<buildTarget/>
 				<stopOnError>true</stopOnError>
 				<useDefaultCommand>false</useDefaultCommand>
@@ -157,7 +157,7 @@
 			</target>
 			<target name="Remote SIGHUP" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 				<buildCommand>ssh</buildCommand>
-				<buildArguments>tom@greenian "killall -HUP UniPLC"</buildArguments>
+				<buildArguments>root@greenian "killall -HUP uniplc"</buildArguments>
 				<buildTarget/>
 				<stopOnError>true</stopOnError>
 				<useDefaultCommand>false</useDefaultCommand>
@@ -165,7 +165,7 @@
 			</target>
 			<target name="Remote SIGUSR1" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 				<buildCommand>ssh</buildCommand>
-				<buildArguments>tom@greenian "killall -USR1 UniPLC"</buildArguments>
+				<buildArguments>root@greenian "killall -USR1 uniplc"</buildArguments>
 				<buildTarget/>
 				<stopOnError>true</stopOnError>
 				<useDefaultCommand>false</useDefaultCommand>
@@ -173,7 +173,7 @@
 			</target>
 			<target name="Remote restart" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 				<buildCommand>ssh</buildCommand>
-				<buildArguments>tom@greenian "killall UniPLC; sleep .5; /home/tom/grive-Tom.Wimmenhove/Projects/automation/UniPLC/Debug/UniPLC -f /home/tom/grive-Tom.Wimmenhove/Projects/automation/UniPLC/gh.conf  -d"</buildArguments>
+				<buildArguments>root@greenian "/etc/init.d/plc restart"</buildArguments>
 				<buildTarget/>
 				<stopOnError>true</stopOnError>
 				<useDefaultCommand>false</useDefaultCommand>
@@ -181,7 +181,7 @@
 			</target>
 			<target name="Remote make U12" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 				<buildCommand>ssh</buildCommand>
-				<buildArguments>tom@greenian "cd /home/tom/grive-Tom.Wimmenhove/Projects/automation/plugins/U12IODevice/Debug; make clean ; make -j 2 all"</buildArguments>
+				<buildArguments>root@greenian "cd /home/tom/grive-Tom.Wimmenhove/Projects/automation/plugins/U12IODevice/; make clean ; make -j 2 all; make install"</buildArguments>
 				<buildTarget/>
 				<stopOnError>true</stopOnError>
 				<useDefaultCommand>false</useDefaultCommand>

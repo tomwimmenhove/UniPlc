@@ -44,6 +44,7 @@ private:
 	void* plcLogicHandle;
 	IPlcLogic* plcLogic;
 	void* destroyPlcLogic;
+	const char* pidFile;
 
 	std::vector<void*> ioDeviceHandles;
 	std::vector<IIODevice*> ioDevices;

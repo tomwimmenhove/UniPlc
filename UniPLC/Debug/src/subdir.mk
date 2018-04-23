@@ -9,6 +9,12 @@ CPP_SRCS += \
 ../src/logger.cpp \
 ../src/main.cpp 
 
+O_SRCS += \
+../src/ModbusServer.o \
+../src/UniPLC.o \
+../src/logger.o \
+../src/main.o 
+
 OBJS += \
 ./src/ModbusServer.o \
 ./src/UniPLC.o \

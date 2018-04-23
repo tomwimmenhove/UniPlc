@@ -29,6 +29,7 @@ UniPLC::UniPLC(int argc, char **argv)
 	Logger::logger(LOG_INFO, "UniPLC Starting\n");
 
 	const char* configFile = "/etc/uniplc/uniplc.conf";
+	pidFile = "/var/run/uniplc/uniplc.pid";
 	int c;
 
 	optind = 1;
@@ -38,15 +39,16 @@ UniPLC::UniPLC(int argc, char **argv)
 		static struct option long_options[] =
 		{
 				/* These options set a flag. */
-				{"help", 		no_argument,       0, 'h'},
+				{"help", 	no_argument,       0, 'h'},
 				{"config",	required_argument, 0, 'f'},
-				{"daemon",	required_argument, 0, 'd'},
+				{"daemon",	no_argument,       0, 'd'},
+				{"pidfile",	required_argument, 0, 'p'},
 				{0, 0, 0, 0}
 		};
 		/* getopt_long stores the option index here. */
 		int option_index = 0;
 
-		c = getopt_long (argc, argv, "hf:d",
+		c = getopt_long (argc, argv, "hf:dp:",
 				long_options, &option_index);
 
 		/* Detect the end of the options. */
@@ -61,6 +63,7 @@ UniPLC::UniPLC(int argc, char **argv)
 			printf("\t--help   -h               : This\n");
 			printf("\t--config -f <config file> : Specify config file\n");
 			printf("\t--daemon -d               : Daemonize\n");
+			printf("\t--pidfile -p <pid file>   : Specify pid file\n");
 			throw 0;
 			break;
 
@@ -70,6 +73,10 @@ UniPLC::UniPLC(int argc, char **argv)
 
 		case 'd':
 			daemonize = true;
+			break;
+
+		case 'p':
+			pidFile = optarg;
 			break;
 
 		default:
@@ -342,6 +349,17 @@ int UniPLC::run()
 
 		Logger::setLogger(Logger::sysloglogger);
 		openlog("UniPLC", LOG_PID, LOG_DAEMON);
+
+		FILE *fPid = fopen(pidFile, "w+");
+		if (fPid == NULL)
+		{
+			Logger::logger(LOG_CRIT, "Could not write pid file %s: %s\n", pidFile, strerror(errno));
+		}
+		else
+		{
+			fprintf(fPid, "%d", getpid());
+			fclose(fPid);
+		}
 
 		daemonize = false;
 	}
